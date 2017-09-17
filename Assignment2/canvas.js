@@ -1,7 +1,11 @@
-function init() {
-    // Access main canvas
-    canvas = document.getElementById("mainCanvas");
+// Global variables
+var colors = [["#1962FF"], ["#1790E8"], ["#26DDFF"], ["#17E8D0"], ["#19FFA4"]];
+var circleList = [];
+var mouse = {x: 0, y: 0, ox: 0, oy: 0, vx: 0, vy: 0};
+var canvas = document.getElementById("mainCanvas");
 
+// Initializes canvas
+function init() {
     // Set canvas height and width
     canvas.width = 700;
     canvas.height = 500;
@@ -10,8 +14,6 @@ function init() {
     mainContext = canvas.getContext("2d");
 }
 
-// Global variables
-var colors = [["#1962FF"], ["#1790E8"], ["#26DDFF"], ["#17E8D0"], ["#19FFA4"]];
 
 // Animates circles
 requestAnimationFrame(function loop() {
@@ -28,6 +30,7 @@ requestAnimationFrame(function loop() {
     }
 });
 
+
 // Defines circle objects
 var Circle = function (color) {
     // x and y coordinates
@@ -40,6 +43,7 @@ var Circle = function (color) {
     // Colors
     this.c = color;
 
+    // Time: increments for every move
     this.t = Math.random() * (50) + 1;
 };
 
@@ -55,24 +59,58 @@ Circle.prototype = {
         mainContext.stroke();
     },
 
-    // Move circles to the left
+    // Move circles to the left and up/down
     move: function () {
         // Move to the left
         this.x = this.x - 1;
 
-        // Move up and down
+        // Move up and down: inside sin = rate of moving up and down; outside sin = change in height
         this.y += (Math.sin(this.t/20))*1.2;
 
         // Moves circle from left to right of screen after it exits the screens
-        if (this.x + this.r === 0) {
+        if (this.x + this.r <= 0) {
             this.x = canvas.width + this.r;
+        }
+
+        // Managing cursor interaction
+        var dx = mouse.x - this.x;
+        var dy = mouse.y - this.y;
+        var d = Math.sqrt(dx * dx + dy * dy);
+
+        // Checks for distance between cursor and objects
+        if (d < 50) {
+            if (d < 1) {
+                d = 1;
+            }
+            d = Math.sqrt(d);
+            // d*=5;
+            this.x += mouse.vx/d;
+            this.y += mouse.vy/d;
         }
 
         this.t++;
     }
 };
 
-var circleList = [];
+// Add cursor interaction to bubbles
+canvas.addEventListener('mousemove', function(e){
+    // Gets canvas info
+    var rect = canvas.getBoundingClientRect();
+
+    // Update previous position: old one is now the new one
+    mouse.ox = mouse.x;
+    mouse.oy = mouse.y;
+
+    // Update current position: compensates for position canvas with respect to the window
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+
+    // Update velocity
+    mouse.vx = mouse.x - mouse.ox;
+    mouse.vy = mouse.y - mouse.oy;
+});
+
+
 
 // Create circle
 function createCircle() {
@@ -84,4 +122,3 @@ for (var i = 0; i < 100; i++) {
     circleList.push(createCircle());
 }
 
-// TODO: up and down slightly
