@@ -7,8 +7,8 @@ var canvas = document.getElementById("mainCanvas");
 // Initializes canvas
 function init() {
     // Set canvas height and width
-    canvas.width = 700;
-    canvas.height = 500;
+    canvas.width = 900;
+    canvas.height = 600;
 
     // 2D drawing context
     mainContext = canvas.getContext("2d");
@@ -23,6 +23,10 @@ requestAnimationFrame(function loop() {
     mainContext.fillStyle = "#ffffff";
     mainContext.fillRect(0, 0, canvas.width, canvas.height);
 
+    //
+    var fish = new Fish();
+    fish.render();
+
     for (var i = 0; i < 100; i++) {
         var currentCircle = circleList[i];
         currentCircle.move();
@@ -34,8 +38,8 @@ requestAnimationFrame(function loop() {
 // Defines circle objects
 var Circle = function (color) {
     // x and y coordinates
-    this.x = Math.floor(Math.random() * (700) + 1);
-    this.y = Math.floor(Math.random() * (500) + 1);
+    this.x = Math.floor(Math.random() * (900) + 1);
+    this.y = Math.floor(Math.random() * (600) + 1);
 
     // Radius
     this.r = Math.floor(Math.random() * (20) + 1);
@@ -92,6 +96,50 @@ Circle.prototype = {
     }
 };
 
+// Defines circle objects
+var Fish = function () {
+    // x and y coordinates
+    this.x = 0;
+    this.y = 0;
+
+    // Rotation
+    this.rot = 0;
+
+    // Time: increments for every move
+    this.time = 0;
+};
+
+// Defines circle methods
+Fish.prototype = {
+    // constructor: Circle,
+
+    // Draw fish
+    render: function () {
+        // Main oval
+        mainContext.beginPath();
+        mainContext.ellipse(300, 300, 50, 75, 1.5708, 0, 2 * Math.PI);
+        mainContext.fillStyle = "orange";
+        mainContext.fill();
+
+        // One fin
+        mainContext.beginPath();
+        mainContext.ellipse(210, 280, 30, 45, 11.5708, 0, 2 * Math.PI);
+        mainContext.fillStyle = "orange";
+        mainContext.fill();
+
+        // One fin
+        mainContext.beginPath();
+        mainContext.ellipse(210, 320, 30, 45, -10+1.5708, 0, 2 * Math.PI);
+        mainContext.fillStyle = "orange";
+        mainContext.fill();
+    },
+
+    // Move fish along path
+    move: function () {
+
+    }
+};
+
 // Add cursor interaction to bubbles
 canvas.addEventListener('mousemove', function(e){
     // Gets canvas info
@@ -128,4 +176,6 @@ function createCircle() {
 for (var i = 0; i < 100; i++) {
     circleList.push(createCircle());
 }
+
+//TODO: figure out path of fish, add bubbles as children to fish
 
