@@ -110,6 +110,13 @@ canvas.addEventListener('mousemove', function(e){
     mouse.vy = mouse.y - mouse.oy;
 });
 
+// Add cursor interaction to bubbles
+canvas.addEventListener('mouseout', function(e){
+    // Update velocity
+    mouse.vx = 0;
+    mouse.vy = 0;
+});
+
 
 
 // Create circle
