@@ -117,9 +117,17 @@ Fish.prototype = {
     },
 
     // Move fish along path
-    move: function () {
-        // Move to the right
-        this.x = this.x + 2;
+    move: function (x, y) {
+
+        if (x !== 0 && y !== 0){
+            // Move little fish
+            this.x = x - 100;
+            this.y = y + Math.sin(this.x/10)*2 - 100;
+        } else {
+            // Move big fish
+            this.x = this.x + 2;
+            this.y = this.y + Math.sin(this.x/20)*1.5;
+        }
 
         // Moves fish from right to left of screen after it exits the screens
         if (this.x - 120 >= 900) {
@@ -178,7 +186,8 @@ requestAnimationFrame(function loop() {
 
     bigFish.render();
     smallFish.render();
-    // bigFish.move();
+    bigFish.move(0, 0);
+    smallFish.move(bigFish.x, bigFish.y);
 
     for (var i = 0; i < 100; i++) {
         var currentCircle = circleList[i];
