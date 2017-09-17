@@ -201,4 +201,3 @@ requestAnimationFrame(function loop() {
         currentCircle.render();
     }
 });
-
