@@ -122,7 +122,7 @@ Fish.prototype = {
         if (x !== 0 && y !== 0){
             // Move little fish
             this.x = x - 100;
-            this.y = y + Math.sin(this.x/10)*2 - 100;
+            this.y = y + Math.sin(this.x/10)*4 - 100;
         } else {
             // Move big fish
             this.x = this.x + 2;
@@ -132,6 +132,12 @@ Fish.prototype = {
         // Moves fish from right to left of screen after it exits the screens
         if (this.x - 120 >= 900) {
             this.x = -75;
+            if (x !== 0 && y !== 0){
+                // Reset y value for little fish
+                this.y = y - 100;
+            } else {
+                this.y = y + 300;
+            }
         }
     }
 };
