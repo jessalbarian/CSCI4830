@@ -14,27 +14,6 @@ function init() {
     mainContext = canvas.getContext("2d");
 }
 
-
-// Animates circles
-requestAnimationFrame(function loop() {
-    requestAnimationFrame(loop);
-
-    // Refresh canvas
-    mainContext.fillStyle = "#ffffff";
-    mainContext.fillRect(0, 0, canvas.width, canvas.height);
-
-    //
-    var fish = new Fish();
-    fish.render();
-
-    for (var i = 0; i < 100; i++) {
-        var currentCircle = circleList[i];
-        currentCircle.move();
-        currentCircle.render();
-    }
-});
-
-
 // Defines circle objects
 var Circle = function (color) {
     // x and y coordinates
@@ -97,10 +76,13 @@ Circle.prototype = {
 };
 
 // Defines circle objects
-var Fish = function () {
+var Fish = function (x, y, size) {
     // x and y coordinates
-    this.x = 0;
-    this.y = 0;
+    this.x = x;
+    this.y = y;
+
+    // Size of fish (small or large)
+    this.size = size;
 
     // Rotation
     this.rot = 0;
@@ -117,26 +99,32 @@ Fish.prototype = {
     render: function () {
         // Main oval
         mainContext.beginPath();
-        mainContext.ellipse(300, 300, 50, 75, 1.5708, 0, 2 * Math.PI);
+        mainContext.ellipse(this.x, this.y, (50 * this.size), (75 * this.size), 1.5708, 0, 2 * Math.PI);
         mainContext.fillStyle = "orange";
         mainContext.fill();
 
         // One fin
         mainContext.beginPath();
-        mainContext.ellipse(210, 280, 30, 45, 11.5708, 0, 2 * Math.PI);
+        mainContext.ellipse(this.x - (90 * this.size), this.y - (20 * this.size), (30 * this.size), (45 * this.size), 11.5708, 0, 2 * Math.PI);
         mainContext.fillStyle = "orange";
         mainContext.fill();
 
-        // One fin
+        // Another fin
         mainContext.beginPath();
-        mainContext.ellipse(210, 320, 30, 45, -10+1.5708, 0, 2 * Math.PI);
+        mainContext.ellipse(this.x - (90 * this.size), this.y + (20 * this.size), (30 * this.size), (45 * this.size), -8.4292, 0, 2 * Math.PI);
         mainContext.fillStyle = "orange";
         mainContext.fill();
     },
 
     // Move fish along path
     move: function () {
+        // Move to the right
+        this.x = this.x + 2;
 
+        // Moves fish from right to left of screen after it exits the screens
+        if (this.x - 120 >= 900) {
+            this.x = -75;
+        }
     }
 };
 
@@ -177,5 +165,25 @@ for (var i = 0; i < 100; i++) {
     circleList.push(createCircle());
 }
 
-//TODO: figure out path of fish, add bubbles as children to fish
+var bigFish = new Fish(300, 300, 1);
+var smallFish = new Fish(200, 400, 0.5);
+
+// Animates circles
+requestAnimationFrame(function loop() {
+    requestAnimationFrame(loop);
+
+    // Refresh canvas
+    mainContext.fillStyle = "#29abe2";
+    mainContext.fillRect(0, 0, canvas.width, canvas.height);
+
+    bigFish.render();
+    smallFish.render();
+    // bigFish.move();
+
+    for (var i = 0; i < 100; i++) {
+        var currentCircle = circleList[i];
+        currentCircle.move();
+        currentCircle.render();
+    }
+});
 
