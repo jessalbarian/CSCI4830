@@ -3,6 +3,8 @@ var colors = [["#1962FF"], ["#1790E8"], ["#26DDFF"], ["#17E8D0"], ["#19FFA4"]];
 var circleList = [];
 var mouse = {x: 0, y: 0, ox: 0, oy: 0, vx: 0, vy: 0};
 var canvas = document.getElementById("mainCanvas");
+var dx = 0, dy = 0;
+var speed = 100; // px per second
 
 // Initializes canvas
 function init() {
@@ -66,7 +68,6 @@ Circle.prototype = {
                 d = 1;
             }
             d = Math.sqrt(d);
-            // d*=5;
             this.x += mouse.vx/d;
             this.y += mouse.vy/d;
         }
@@ -167,6 +168,19 @@ canvas.addEventListener('mouseout', function(e){
     mouse.vy = 0;
 });
 
+// Add key down interaction to fish
+document.addEventListener('keydown', function(e) {
+    if (e.keyCode === 40) {
+        dy = 2;
+    }
+});
+
+// Add key up interaction to fish
+document.addEventListener('keyup', function(e) {
+    if (e.keyCode === 38) {
+        dy = -2;
+    }
+});
 
 
 // Create circle
@@ -194,6 +208,8 @@ requestAnimationFrame(function loop() {
     smallFish.render();
     bigFish.move(0, 0);
     smallFish.move(bigFish.x, bigFish.y);
+    bigFish.x += dx / 60 * speed;
+    bigFish.y += dy / 60 * speed;
 
     for (var i = 0; i < 100; i++) {
         var currentCircle = circleList[i];
