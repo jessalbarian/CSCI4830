@@ -13,6 +13,8 @@
 <p>Hey! Use your cursor to move the bubbles around, and use your up and down arrow keys to move the fish.</p>
 
 <canvas id="mainCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
+<input type="range"  min="1" max="60" value="60" onchange="updateFrameRate(this.value)"/>
+<span id="FrameRateLabel">60</span>
 
 <script src="canvas.js"></script>
 
